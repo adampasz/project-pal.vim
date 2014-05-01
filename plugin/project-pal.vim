@@ -19,6 +19,17 @@ function! AsyncStatus(cmd)
 	endif
 endfunction
 
+function! BuildProject(...)
+	if a:0 < 1
+		let args = input('args: ')
+	else 
+		let args = a:1
+	end
+	exe 'cd ' . g:proot
+	hi StatusLine guibg=DimGray
+	exe 'call AsyncStatus("' . g:buildProjectCommand . ' ' . args . '")'
+endfunction 
+
 function! s:asyncStatusCallback(cmd)
     let env = {'cmd': a:cmd}
     function env.get(file_name)
