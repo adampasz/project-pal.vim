@@ -9,6 +9,32 @@ let g:asyncStatusInProgress = 0
 command! -nargs=0 InitProject call s:initProject()
 command! -nargs=0 GenerateTags call s:generateTags()
 
+function! CreateProject(...)
+	if a:0 < 2
+		let path = input('project path: ')
+	else 
+		let path = a:2
+	endif
+	if a:0 < 1
+		let name = input('project name: ')
+	else
+		let name = a:1
+	endif
+	let code=[
+	\ "let g:proot=fnameescape('" . path . "')", 
+	\ "let g:buildProjectCommand='pack'", 
+	\ "let g:ptags = ['.']",
+	\ "GenerateTags"
+	\]  
+	echo code
+	exe '!mkdir ' . g:proj . name
+	let settingsPath = g:proj . name . '/settings.vim'
+	exe '!rm ' . settingsPath
+	for s in code
+		exe '!echo "' . s . '" >> ' . settingsPath		
+	endfor
+endfunction
+
 function! AsyncStatus(cmd)
 	if g:asyncStatusInProgress
 		call add(g:asyncStatusList, a:cmd)
@@ -41,6 +67,8 @@ function! s:asyncStatusCallback(cmd)
     endfunction
     return asynccommand#tab_restore(env)
 endfunction
+
+
 
 function! s:initProject()
 	hi StatusLine guibg=DimGray
