@@ -88,8 +88,9 @@ function! s:generateTags()
 	let projPath = g:proj . g:currentProject . '/tags'
 	exe 'silent !rm ' . projPath
 	let args = '-Rf'
+	let ctags = exists('g:ctagsPath') ? g:ctagsPath : 'ctags'
 	for t in g:ptags
-		exe 'call AsyncStatus("ctags ' . args . ' ' . projPath . ' ' . shellescape(g:proot . t) . '")'
+		exe 'call AsyncStatus("' . ctags . ' ' . args . ' ' . projPath . ' ' . shellescape(g:proot . t) . '")'
 		let args = '-Raf'
 	endfor
 	exe 'set' . ' tags=' . projPath	
