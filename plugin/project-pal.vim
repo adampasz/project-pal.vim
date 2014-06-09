@@ -8,6 +8,8 @@ let g:asyncStatusInProgress = 0
 
 command! -nargs=0 InitProject call s:initProject()
 command! -nargs=0 GenerateTags call s:generateTags()
+" experimental
+command! -nargs=0 XGenerateJSTags call s:generateJSTags()
 
 function! CreateProject(...)
 	if a:0 < 2
@@ -81,7 +83,6 @@ function! s:initProject()
 	"	FDBReset
 	"endif
 	exe 'source ' . g:proj . pname . '/settings.vim'
-	call s:generateTags()
 endfunction
 
 function! s:generateTags()
@@ -96,3 +97,14 @@ function! s:generateTags()
 	exe 'set' . ' tags=' . projPath	
 endfunction
 
+"EXPERIMENTAL
+function! s:generateJSTags()
+	let projPath = g:proj . g:currentProject . '/tags'
+	exe 'silent !rm ' . projPath
+	for t in g:ptags
+		exe 'call AsyncStatus("jstags ' . g:proot . t . ' >> ' . projPath . '")'
+	endfor
+	exe 'call AsyncStatus("sort ' . projPath . ' | uniq -ud > temp.txt ; mv temp.txt ' . projPath . '")'
+	exe 'set' . ' tags=' . projPath
+endfunction
+" use: set tags+=tags
