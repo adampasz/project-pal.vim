@@ -83,6 +83,7 @@ function! s:initProject()
 	"	FDBReset
 	"endif
 	exe 'source ' . g:proj . pname . '/settings.vim'
+	exe 'cd ' . g:proot
 endfunction
 
 function! s:generateTags()
